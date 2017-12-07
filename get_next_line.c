@@ -6,7 +6,7 @@
 /*   By: mabessir <mabessir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/04 11:28:27 by mabessir          #+#    #+#             */
-/*   Updated: 2017/12/07 11:11:27 by mabessir         ###   ########.fr       */
+/*   Updated: 2017/12/07 15:47:00 by mabessir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	get_next_line(const int fd, char **line)
 {
 	int			i;
-	int			len;
 	static char	*tmp;
 	char		buff[BUFF_SIZE + 1];
 
@@ -24,12 +23,14 @@ int	get_next_line(const int fd, char **line)
 		return (-1);
 	if (!tmp)
 		ft_strnew(BUFF_SIZE);
-	while (i = read(fd, tmp, BUFF_SIZE) != 0 && ft_strchr(tmp, '\n') == NULL)
+	while ((i = read(fd, tmp, BUFF_SIZE)) != 0 && (ft_strchr(tmp, '\n')
+	== NULL))
 	{
 		if (i == -1)
 			return (-1);
 		buff[i] = 0;
-		tmp = ft_strjoin(tmp, buff, BUFF_SIZE); 
+		tmp = ft_strjoin(tmp, buff);
 	}
+	*line = tmp;
 	return (i == 0 ? 0 : 1);
 }

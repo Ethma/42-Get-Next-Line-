@@ -6,14 +6,14 @@
 /*   By: mabessir <mabessir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/04 11:21:42 by mabessir          #+#    #+#             */
-/*   Updated: 2017/12/07 09:02:22 by mabessir         ###   ########.fr       */
+/*   Updated: 2017/12/07 12:11:18 by mabessir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include "Libft/libft.h"
+# include "libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/types.h>
