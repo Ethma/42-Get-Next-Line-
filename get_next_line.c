@@ -6,7 +6,7 @@
 /*   By: mabessir <mabessir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/04 11:28:27 by mabessir          #+#    #+#             */
-/*   Updated: 2017/12/07 15:47:00 by mabessir         ###   ########.fr       */
+/*   Updated: 2017/12/08 16:04:15 by mabessir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ int	get_next_line(const int fd, char **line)
 	static char	*tmp;
 	char		buff[BUFF_SIZE + 1];
 
-	i = 0;
+	i = 1;
 	if ((fd < 0 || !line || BUFF_SIZE <= 0))
 		return (-1);
 	if (!tmp)
-		ft_strnew(BUFF_SIZE);
+		ft_strnew(0);
 	while ((i = read(fd, tmp, BUFF_SIZE)) != 0 && (ft_strchr(tmp, '\n')
 	== NULL))
 	{
@@ -31,6 +31,11 @@ int	get_next_line(const int fd, char **line)
 		buff[i] = 0;
 		tmp = ft_strjoin(tmp, buff);
 	}
-	*line = tmp;
+	if (ft_strchr(tmp, '\n') || ((*line = ft_strdup(tmp)) && 0))
+		*line = ft_strsub(tmp, 0, ft_strchr(tmp, '\n') - tmp + 1);
+	if (i != 0)
+		line[0][ft_strlen(*line) - 1] = 0;
+	tmp = ft_strsub(tmp, ft_strchr(tmp, '\n') - tmp + 1,
+	ft_strlen(ft_strchr(tmp, '\n')));
 	return (i == 0 ? 0 : 1);
 }
