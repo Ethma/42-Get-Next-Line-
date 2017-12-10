@@ -6,36 +6,56 @@
 /*   By: mabessir <mabessir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/04 11:28:27 by mabessir          #+#    #+#             */
-/*   Updated: 2017/12/08 16:04:15 by mabessir         ###   ########.fr       */
+/*   Updated: 2017/12/10 21:58:08 by Mendy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	get_next_line(const int fd, char **line)
+static int	test(int fd, char **tmp)
+{
+	char	*buff;
+	char	*str;
+	int		i;
+
+	if (!(buff = (char *)malloc(sizeof(*buff) * (BUFF_SIZE + 1))))
+			return (-1);
+		i = read(fd, buff, BUFF_SIZE);
+		if (i > 0)
+		{
+			buff[i] = '\0';
+			str = ft_strjoin(*tmp, buff);
+			free(*tmp);
+			*tmp = str;
+		}
+		free(buff);
+		return (i);
+}
+
+int			get_next_line(const int fd, char **line)
 {
 	int			i;
 	static char	*tmp;
-	char		buff[BUFF_SIZE + 1];
+	char		*buff;
 
-	i = 1;
-	if ((fd < 0 || !line || BUFF_SIZE <= 0))
+	if ((!tmp && (tmp = (char *)malloc(sizeof(tmp))) == NULL) || fd < 0 ||
+	!line || BUFF_SIZE <= 0)
 		return (-1);
-	if (!tmp)
-		ft_strnew(0);
-	while ((i = read(fd, tmp, BUFF_SIZE)) != 0 && (ft_strchr(tmp, '\n')
-	== NULL))
+	buff = ft_strchr(tmp, '\n');
+	while (!buff)
 	{
-		if (i == -1)
+		i = test(fd, &tmp);
+		if (i < 0)
 			return (-1);
-		buff[i] = 0;
-		tmp = ft_strjoin(tmp, buff);
+		if (!i)
+		{
+			if (!ft_strlen(tmp))
+				return (0);
+			tmp = ft_strjoin(tmp, "\n");
+		}
+		buff = ft_strchr(tmp, '\n');
 	}
-	if (ft_strchr(tmp, '\n') || ((*line = ft_strdup(tmp)) && 0))
-		*line = ft_strsub(tmp, 0, ft_strchr(tmp, '\n') - tmp + 1);
-	if (i != 0)
-		line[0][ft_strlen(*line) - 1] = 0;
-	tmp = ft_strsub(tmp, ft_strchr(tmp, '\n') - tmp + 1,
-	ft_strlen(ft_strchr(tmp, '\n')));
-	return (i == 0 ? 0 : 1);
+	*line = ft_strsub(tmp, 0, ft_strlen(tmp) - ft_strlen(buff));
+	tmp = ft_strdup(buff + 1);
+	return (1);
 }
