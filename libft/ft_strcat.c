@@ -5,24 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabessir <mabessir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/09 10:05:20 by mabessir          #+#    #+#             */
-/*   Updated: 2017/11/16 10:02:14 by mabessir         ###   ########.fr       */
+/*   Created: 2017/12/11 14:38:30 by mabessir          #+#    #+#             */
+/*   Updated: 2017/12/11 14:38:31 by mabessir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strcat(char *dest, const char *src)
+char	*ft_strcat(char *s1, const char *s2)
 {
-	int i;
+	size_t	i;
 
-	i = ft_strlen(dest);
-	while (*src)
-	{
-		dest[i] = *src;
+	i = 0;
+	while (s1[i])
 		i++;
-		src++;
-	}
-	dest[i] = 0;
-	return (dest);
+	while (*s2)
+		s1[i++] = *s2++;
+	s1[i] = '\0';
+	return (s1);
 }

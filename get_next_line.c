@@ -5,57 +5,75 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabessir <mabessir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/12/04 11:28:27 by mabessir          #+#    #+#             */
-/*   Updated: 2017/12/10 21:58:08 by Mendy            ###   ########.fr       */
+/*   Created: 2017/12/11 13:43:39 by mabessir          #+#    #+#             */
+/*   Updated: 2017/12/11 14:06:17 by mabessir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	test(int fd, char **tmp)
+static int		rread(char **str, int fd)
 {
-	char	*buff;
-	char	*str;
 	int		i;
+	char	*s;
+	char	buf[BUFF_SIZE + 1];
 
-	if (!(buff = (char *)malloc(sizeof(*buff) * (BUFF_SIZE + 1))))
-			return (-1);
-		i = read(fd, buff, BUFF_SIZE);
-		if (i > 0)
-		{
-			buff[i] = '\0';
-			str = ft_strjoin(*tmp, buff);
-			free(*tmp);
-			*tmp = str;
-		}
-		free(buff);
-		return (i);
+	if ((i = read(fd, buf, BUFF_SIZE)) == -1)
+		return (-1);
+	buf[i] = '\0';
+	s = *str;
+	*str = ft_strjoin(*str, buf);
+	if (*s != 0)
+		free(s);
+	return (i);
 }
 
-int			get_next_line(const int fd, char **line)
+static int		gline(char **str, char **line, char *s)
+{
+	int		i;
+	char	*buff;
+
+	i = 0;
+	if (*s == '\n')
+		i = 1;
+	*s = 0;
+	*line = ft_strjoin("", *str);
+	if (i == 0 && ft_strlen(*str) != 0)
+	{
+		*str = ft_strnew(1);
+		return (1);
+	}
+	else if (i == 0 && !(ft_strlen(*str)))
+		return (0);
+	buff = *str;
+	*str = ft_strjoin(s + 1, "");
+	free(buff);
+	return (i);
+}
+
+int				get_next_line(int const fd, char **line)
 {
 	int			i;
-	static char	*tmp;
-	char		*buff;
+	char		*s;
+	static char	*str;
 
-	if ((!tmp && (tmp = (char *)malloc(sizeof(tmp))) == NULL) || fd < 0 ||
-	!line || BUFF_SIZE <= 0)
+	if (str == 0)
+		str = "";
+	if (!line || BUFF_SIZE < 1)
 		return (-1);
-	buff = ft_strchr(tmp, '\n');
-	while (!buff)
+	i = BUFF_SIZE;
+	while (line)
 	{
-		i = test(fd, &tmp);
-		if (i < 0)
-			return (-1);
-		if (!i)
+		s = str;
+		while (*s || i < BUFF_SIZE)
 		{
-			if (!ft_strlen(tmp))
-				return (0);
-			tmp = ft_strjoin(tmp, "\n");
+			if (*s == '\n' || *s == 0 || *s == -1)
+				return (gline(&str, line, s));
+			s++;
 		}
-		buff = ft_strchr(tmp, '\n');
+		i = rread(&str, fd);
+		if (i == -1)
+			return (-1);
 	}
-	*line = ft_strsub(tmp, 0, ft_strlen(tmp) - ft_strlen(buff));
-	tmp = ft_strdup(buff + 1);
-	return (1);
+	return (0);
 }

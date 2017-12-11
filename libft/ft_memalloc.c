@@ -5,20 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabessir <mabessir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/09 14:16:53 by mabessir          #+#    #+#             */
-/*   Updated: 2017/11/09 15:47:04 by mabessir         ###   ########.fr       */
+/*   Created: 2017/12/11 14:38:05 by mabessir          #+#    #+#             */
+/*   Updated: 2017/12/11 14:38:06 by mabessir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdlib.h>
 
 void	*ft_memalloc(size_t size)
 {
-	void *tab;
+	void	*s;
 
-	tab = (void *)malloc(sizeof(tab) * (size));
-	if (!tab)
+	if ((s = malloc(size)) == NULL)
 		return (NULL);
-	ft_bzero(tab, size);
-	return (tab);
+	ft_bzero(s, size);
+	return (s);
 }
